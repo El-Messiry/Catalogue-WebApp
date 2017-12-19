@@ -10,9 +10,38 @@
     <header class="page_header">
 
     </header>
+
+
     <div class="body_container">
 
+        <div class="categories_container">
+            {% if cats %}
+                {% for cat in cats %}
+                <div class="category">
+                    <p>{{cat['name']}}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>NO Items</p>
+            {% endif %}
+        </div>
+
+            <hr>
+
+        <div class="catItem_container">
+            {% if items %}
+                {% for item in items %}
+                <div class="catItem">
+                    <p>{{item['name']}}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>NO Items</p>
+            {% endif %}
+        </div>
+
     </div>
+
     <footer class="page_footer">
 
     </footer>

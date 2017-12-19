@@ -3,11 +3,11 @@ Created on Dec 15, 2017
 
 @author: messiry
 '''
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-
+import datetime
 Base = declarative_base()
 
 
@@ -52,6 +52,7 @@ class Cat_Item(Base):
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
     description = Column(String(250))
+    date = Column(DateTime , default = datetime.datetime.utcnow)
     categorie_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -67,4 +68,5 @@ class Cat_Item(Base):
         }
 
 engine = create_engine('sqlite:///Catalogue.db')
+
 Base.metadata.create_all(engine)
