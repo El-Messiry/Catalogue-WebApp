@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+    <header class="page_header">
+        <a href="{{url_for('login')}}">
+            <button>Login</button>
+        </a>
+    </header>
+    <div class="body_container">
+        <div class="catItem_container">
+            <div class="catItem">
+                <p class="catItem_name">{{item['name']}}</p>
+                <hr>
+                <p class="catItem_desc">{{item['description']}}</p>
+            </div>
+            <a href="{{url_for('Main_Index')}}">
+                <button class="form-button">Main Page</button>
+            </a>
+            <hr>
+            <a href="{{url_for('Show_Items',cat_id=cat_id)}}">
+                <button class="form-button">Back to category</button>
+            </a>
+            <hr>
+            <a href="{{url_for('Edit_Item',cat_id=cat_id,item_id=item['id'])}}">
+                <button class="form-button">Edit</button>
+            </a>
+            <hr>
+            <a href="{{url_for('Delete_Item', cat_id=cat_id,item_id=item['id'])}}">
+                <button class="form-button">Delete</button>
+            </a>
+        </div>
+    </div>
+    <footer class="page_footer">
+
+    </footer>
+</body>
+</html>

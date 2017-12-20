@@ -7,14 +7,33 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
-    <header class="page_header">
 
-    </header>
     <div class="body_container">
+        <header class="page_header">
 
+        </header>
+        <div class="content_container">
+                <form method="POST">
+                        <table class="edit-menu-item">
+                            <tr>
+                                <td><label>Enter Item Name</label></td>
+                                <td><input class="small-text-box" type="text" name="catItem_name" placeholder="name ..."></td>
+                            </tr>
+                            <tr>
+                                <td><label>Enter Item description</label></td>
+                                <td><input class="large-text-box" type="text" name="catItem_desc" placeholde="description ....."></td>
+                            </tr>
+                        </table>
+                        <input class="submit-button" type="submit" value="submit">
+                    </form>
+                    <a href="{{url_for('Main_Index')}}">
+                                <button class="form-button">Go Back</button>
+                    </a>
+        </div>
+        <footer class="page_footer">
+
+        </footer>
     </div>
-    <footer class="page_footer">
 
-    </footer>
 </body>
 </html>

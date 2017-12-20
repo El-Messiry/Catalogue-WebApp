@@ -57,7 +57,8 @@ session.commit()
 
 # Create dummy categories with dummy items
 
-category = Category(name='SnowBoarding',user_id=1)
+category = Category(name='SnowBoarding', user_id=1,
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis." )
 session.add(category)
 session.commit()
 
@@ -86,7 +87,8 @@ session.commit()
 #-----------------------------------------------------#
 #-----------------------------------------------------#
 
-category = Category(name='Basketball',user_id=1)
+category = Category(name='Basketball',user_id=1,
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(category)
 session.commit()
 
@@ -114,7 +116,8 @@ session.commit()
 #-----------------------------------------------------#
 
 
-category = Category(name='Football',user_id=2)
+category = Category(name='Football',user_id=2,
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(category)
 session.commit()
 
@@ -142,7 +145,8 @@ session.commit()
 #-----------------------------------------------------#
 #-----------------------------------------------------#
 
-category = Category(name='Skating',user_id=3)
+category = Category(name='Skating',user_id=3 ,
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(category)
 session.commit()
 
@@ -173,7 +177,8 @@ session.commit()
 #-----------------------------------------------------#
 
 
-category = Category(name='Hockey',user_id=4)
+category = Category(name='Hockey',user_id=4,
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(category)
 session.commit()
 
@@ -213,7 +218,8 @@ session.commit()
 #-----------------------------------------------------#
 
 
-category = Category(name='Swimming',user_id=5)
+category = Category(name='Swimming',user_id=5,
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(category)
 session.commit()
 
@@ -252,7 +258,8 @@ session.commit()
 #-----------------------------------------------------#
 
 
-category = Category(name='Weight Lifting',user_id=6)
+category = Category(name='Weight Lifting',user_id=6,
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(category)
 session.commit()
 

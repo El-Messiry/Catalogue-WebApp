@@ -11,6 +11,30 @@
 
     </header>
     <div class="body_container">
+        <div class="catItem_container">
+            <div class="category">
+                <p>{{cat['name']}}</p>
+            </div>
+            <div class="unknown">
+                <a href="{{url_for('New_Item',cat_id=cat['id'])}}">
+                <button class="form-button">New Item</button>
+            </a>
+            </div>
+            {% if items %}
+                {% for item in items %}
+                <div class="catItem">
+                    <a href="{{url_for('Show_Item',cat_id=cat['id'],item_id=item['id'])}}">
+                        <button class="form-button">{{item['name']}}</button>
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>NO Items</p>
+            {% endif %}
+            <a href="{{url_for('Main_Index')}}">
+                <button class="form-button">Go Back</button>
+            </a>
+        </div>
 
     </div>
     <footer class="page_footer">

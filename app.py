@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 CLIENT_ID = json.loads(
     open('g_client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Catalogue Item Application"
+APPLICATION_NAME = "Catalogue Menu App"
 
 # Connect to Database and create database session
 engine = create_engine('sqlite:///Catalogue.db')
@@ -38,6 +38,7 @@ session = DBSession()
 # ----------------------------------------------------- #
 
 # <<<<<<<<<<<<<<<<<<<< Methods >>>>>>>>>>>>>>>>>>>>>>>>>>
+
 
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
@@ -61,9 +62,17 @@ def getUserID(email):
         return None
 
 
+def getUser(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user
+    except:
+        return None
+
 # <<<<<<<<<<<<<<<<<<<< Routes >>>>>>>>>>>>>>>>>>>>>>>>>>
 
-@app.route('/login',methods=['GET'])
+
+@app.route('/login', methods=['GET'])
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
@@ -81,16 +90,14 @@ def fbconnect():
     access_token = request.data
     print ("access token received %s " % access_token)
 
-
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
         open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
+    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (  # NOQA
         app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-    print(result)
     result = result.decode('utf-8')
     print("result is : "+result)
     # Use token to get user info from API
@@ -101,27 +108,26 @@ def fbconnect():
         for the server access token then we split it on colons to pull out the actual token value
         and replace the remaining quotes with nothing so that it can be used directly in the graph
         api calls
-    '''
+    '''     # NOQA
     token = result.split(',')[0].split(':')[1].replace('"', '')
 
-    url = 'https://graph.facebook.com/v2.11/me?access_token=%s&fields=name,id,email' % token
+    url = 'https://graph.facebook.com/v2.11/me?access_token=%s&fields=name,id,email' % token   # NOQA
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-    
-    
+
     # print "url sent for API access:%s"% url
     # print "API JSON result: %s" % result
     data = json.loads(result.decode('utf-8'))
     login_session['provider'] = 'facebook'
-    login_session['username'] = data["name"]
-    login_session['email'] = data["email"]
-    login_session['facebook_id'] = data["id"]
+    login_session['username'] = data['name']
+    login_session['email'] = data['email']
+    login_session['facebook_id'] = data['id']
 
     # The token must be stored in the login_session in order to properly logout
     login_session['access_token'] = token
 
     # Get user picture
-    url = 'https://graph.facebook.com/v2.11/me/picture?access_token=%s&redirect=0&height=200&width=200' % token
+    url = 'https://graph.facebook.com/v2.11/me/picture?access_token=%s&redirect=0&height=200&width=200' % token   # NOQA
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -141,7 +147,7 @@ def fbconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # NOQA
 
     flash("Now logged in as %s" % login_session['username'])
     return output
@@ -152,11 +158,11 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
+           facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
-
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -187,6 +193,7 @@ def gconnect():
     h = httplib2.Http()
     req = h.request(url, 'GET')[1]
     result = json.loads(req.decode('utf-8'))
+
     # If there was an error in the access token info, abort.
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
@@ -211,8 +218,10 @@ def gconnect():
 
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
+    print(access_token)
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
+        response = make_response(json.dumps(
+                                'Current user is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -231,8 +240,6 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-    # ADD PROVIDER TO LOGIN SESSION
-    login_session['provider'] = 'google'
 
     # see if user exists, if it doesn't make a new one
     user_id = getUserID(data["email"])
@@ -246,14 +253,17 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '   # NOQA
     flash("you are now logged in as %s" % login_session['username'])
-    print( "done!")
+    print ("done!")
     return output
+
+
 @app.route('/gdisconnect')
-def gdisconnect():
-    # Only disconnect a connected user.
+def disconnect():
+        # Only disconnect a connected user.
     access_token = login_session.get('access_token')
+    print(access_token)
     if access_token is None:
         response = make_response(
             json.dumps('Current user not connected.'), 401)
@@ -262,12 +272,22 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
+
     if result['status'] == '200':
+        # Reset the user's sesson.
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        return redirect(url_for('Main_Index'))
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        # For whatever reason, the given token was invalid.
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -277,9 +297,11 @@ def gdisconnect():
 # ----------------------------------------------------- #
 # ---------------- WebApp Routes  --------------------- #
 # ----------------------------------------------------- #
+
+
 def to_dict(obj):
     '''
-        Returns Dictionary type of the object given 
+        Returns Dictionary type of the object given
     '''
     result = []
     try:
@@ -290,112 +312,364 @@ def to_dict(obj):
     return result
 
 
+def validate_data(cat=0, catItem=0):
+    if cat:
+        if cat['name'] == '' or cat['desc'] == '':
+            return False
+            # should implement Regression to check validity of name and minimum
+            # number of characters for the description
+    if catItem:
+        if catItem['name'] == '' or catItem['desc'] == '':
+            return False
+            # should implement Regression to check validity of name and minimum
+            # number of characters for the description
+
+    return True
+
+
+def bool_username():
+    if 'username' not in login_session:
+        return False
+    else:
+        return True
+
+
 @app.route('/')
-@app.route('/main',methods=['GET'])
-def main_index():
+@app.route('/main', methods=['GET'])
+def Main_Index():
     # fetch all categories
     cats = session.query(Category).all()
     # convert it to Dict type
     cats = to_dict(cats)
-    # fetch latest added items . 
+    # fetch latest added items .
     items = session.query(Cat_Item).order_by(desc(Cat_Item.date)).limit(10)
     # convert it to Dict type
     items = to_dict(items)
-    
-    return render_template("main.html", items = items, cats = cats)
 
-@app.route('/category/new',methods=['GET','POST'])
-def New_Category(cat_id):
-    return render_template("new_category.html")
+    return render_template("main.html",
+                           items=items,
+                           cats=cats,
+                           username=bool_username())
 
-@app.route('/category/<int:cat_id>',methods=['GET'])
+
+@app.route('/category/new', methods=['GET', 'POST'])
+def New_Category():
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+
+    if request.method == 'GET':
+        return render_template("new_category.html")
+
+    if request.method == 'POST':
+        cat = {}
+
+        # fetch form data & assign it to corresponding Dict key
+        cat['name'] = request.form.get('cat_name')
+        cat['desc'] = request.form.get('cat_desc')
+        # DB commit
+        session.add(Category(name=cat['name'],
+                             description=cat['desc'],
+                             user_id=login_session['user_id']))
+
+        session.commit()
+        return redirect(url_for('Main_Index'))
+
+
+@app.route('/category/<int:cat_id>', methods=['GET'])
 def Show_Category(cat_id):
-    return render_template("category.html")
+    # fetch all categories
+    cat = session.query(Category).filter_by(id=cat_id).one()
+    items = session.query(Cat_Item).filter_by(category_id=cat_id).all()
+    # convert it to Dict type
+    cat = to_dict(cat)
+    items = to_dict(items)
 
-@app.route('/category/<int:cat_id>/edit',methods=['GET','POST'])
+    return render_template("category_items.html",
+                           cat=cat,
+                           items=items,
+                           username=bool_username())
+
+
+@app.route('/category/<int:cat_id>/edit', methods=['GET', 'POST'])
 def Edit_Category(cat_id):
-    return render_template("edit_category.html")
+    # fetch all categories
+    cat = session.query(Category).filter_by(id=cat_id).one()
+    # check if user logged in
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
 
-@app.route('/category/<int:cat_id>/delete',methods=['GET','POST'])
+    if cat.user_id != login_session['user_id']:     # Non Authorized user
+        return redirect(url_for('Main_Index'))      # Flash error
+
+    if request.method == 'GET':
+        # convert item to dict
+        cat = to_dict(cat)
+        print(cat)
+        return render_template("edit_category.html", cat=cat)
+
+    if request.method == 'POST':
+        cat = {}
+        cat['name'] = request.form.get('cat_name')
+        cat['desc'] = request.form.get('cat_desc')
+
+        # data form validation should go here !
+        if not (validate_data(cat)):
+            return redirect(url_for('Main_Index'))
+
+        # retrieving DB object to modify
+        category = session.query(Category).filter_by(id=cat_id).one()
+
+        # updating Values
+        category.name = cat['name']
+        category.description = cat['desc']
+
+        # Add & Commit changes
+        session.add(category)
+        session.commit()
+        print("category has been edited successfully !")
+        return redirect(url_for('Main_Index'))
+
+
+@app.route('/category/<int:cat_id>/delete', methods=['GET', 'POST'])
 def Delete_Category(cat_id):
-    return render_template("delete_category.html")
+    # fetch all categories
+    cat = session.query(Category).filter_by(id=cat_id).one()
+    # check if user logged in
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
 
-@app.route('/category/<int:cat_id>/items',methods=['GET'])
+    if cat.user_id != login_session['user_id']:      # Non Authorized user
+        return redirect(url_for('Main_Index'))       # Flash error
+
+    if request.method == 'GET':
+        # fetch all categories
+        cat = session.query(Category).filter_by(id=cat_id).one()
+        cat = to_dict(cat)
+        return render_template("delete_category.html", cat=cat)
+
+    if request.method == 'POST':
+        cat = session.query(Category).filter_by(id=cat_id).one()
+        session.delete(cat)
+        session.commit()
+        return redirect(url_for('Main_Index'))
+
+
+@app.route('/category/<int:cat_id>/items', methods=['GET'])
 def Show_Items(cat_id):
-    return render_template("category_items.html")
+    if request.method == 'GET':
+        cat = session.query(Category).filter_by(id=cat_id).one()
+        # fetch latest added items .
+        items = session.query(Cat_Item).filter_by(category_id=cat_id).all()
+        # convert it to Dict type
+        items = to_dict(items)
 
-@app.route('/category/<int:cat_id>/item/new',methods=['GET','POST'])
-def New_Item(cat_id,item_id):
-    return render_template("new_catItem.html")
+        return render_template("category_items.html",
+                               cat=cat,
+                               items=items,
+                               username=bool_username())
 
-@app.route('/category/<int:cat_id>/item/<int:item_id>',methods=['GET'])
-def Show_Item(cat_id,item_id):
-    return render_template("cat_item.html")
 
-@app.route('/category/<int:cat_id>/item/<int:item_id>/edit',methods=['GET','POST'])
-def Edit_Item(cat_id,item_id):
-    return render_template("edit_catItem")
+@app.route('/category/<int:cat_id>/item/new', methods=['GET', 'POST'])
+def New_Item(cat_id):
+    if 'username' not in login_session:
+        return redirect(url_for('/login'))
 
-@app.route('/category/<int:cat_id>/item/<int:item_id>',methods=['GET','POST'])
-def Delete_Item(cat_id,item_id):
-    return render_template("delete_catItem.html")
+    if request.method == 'GET':
+        return render_template("new_catItem.html", cat_id=cat_id)
 
+    if request.method == 'POST':
+        catItem = {}
+
+        # fetch form data & assign it to corresponding Dict key
+        catItem['name'] = request.form.get('catItem_name')
+        catItem['desc'] = request.form.get('catItem_desc')
+        # DB commit
+        category_item = Cat_Item(name=catItem['name'],
+                                 description=catItem['desc'],
+                                 user_id=login_session['user_id'],
+                                 category_id=cat_id)
+        session.add(category_item)
+        session.commit()
+        return redirect(url_for('Show_Items', cat_id=cat_id))
+
+
+@app.route('/category/<int:cat_id>/item/<int:item_id>', methods=['GET'])
+def Show_Item(cat_id, item_id):
+    if request.method == 'GET':
+        # fetch all categories
+        item = session.query(Cat_Item).filter_by(id=item_id).one()
+        # convert item to dict
+        item = to_dict(item)
+
+        return render_template("cat_item.html",
+                               cat_id=cat_id,
+                               item=item,
+                               username=bool_username())
+
+
+@app.route('/category/<int:cat_id>/item/<int:item_id>/edit',
+           methods=['GET', 'POST'])
+def Edit_Item(cat_id, item_id):
+    # fetch all Items
+    item = session.query(Cat_Item).filter_by(id=item_id).one()
+    # check if user logged in
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+
+    if item.user_id != login_session['user_id']:          # Non Authorized user
+        return redirect(url_for('Show_Items', cat_id=cat_id))     # Flash error
+
+    if request.method == 'GET':
+        # convert item to dict
+        item = to_dict(item)
+        return render_template("edit_catItem.html",
+                               cat_id=cat_id,
+                               item=item)
+
+    if request.method == 'POST':
+        item = {}
+        item['name'] = request.form.get('catItem_name')
+        item['desc'] = request.form.get('catItem_desc')
+
+        # data form validation should go here !
+
+        # retrieving DB object to modify
+        item = session.query(Cat_Item).filter_by(id=item_id).one()
+
+        # updating Values
+        item.name = item['name']
+        item.description = item['desc']
+
+        # Add & Commit changes
+        session.add(item)
+        session.commit()
+        print("category Item has been edited successfully !")
+        return redirect(url_for('/Show_Items', cat_id=cat_id))
+
+
+@app.route('/category/<int:cat_id>/item/<int:item_id>/delete',
+           methods=['GET', 'POST'])
+def Delete_Item(cat_id, item_id):
+    # fetch all Items
+
+    # check if user logged in
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    try:
+        item = session.query(Cat_Item).filter_by(id=item_id).one()
+    except:
+        print("Trying to delete not existing row")
+        return redirect(url_for('Show_Items', cat_id=cat_id))
+    if item.user_id != login_session['user_id']:         # Non Authorized user
+        return redirect(url_for('Show_Items', cat_id=cat_id))    # Flash error
+
+    if request.method == 'GET':
+        # fetch all categories
+        item = session.query(Cat_Item).filter_by(id=item_id).one()
+        item = to_dict(item)
+        return render_template("delete_catItem.html", cat_id=cat_id, item=item)
+
+    if request.method == 'POST':
+        try:
+            item = session.query(Cat_Item).filter_by(id=item_id).one()
+            session.delete(item)
+            session.commit()
+            return redirect(url_for('Show_Items', cat_id=cat_id))
+        except:
+            print("Trying to delete not existing row")
+            return redirect(url_for('Show_Items', cat_id=cat_id))
 
 # ----------------------------------------------------- #
 # -------------- WebApp JSON API  --------------------- #
 # ----------------------------------------------------- #
 
 
-@app.route('/main/JSON',methods=['GET'])
+@app.route('/main/JSON', methods=['GET'])
 def main_index_JSON():
     # fetch all categories
     cats = session.query(Category).all()
-    # fetch latest added items . 
+    # fetch latest added items .
     items = session.query(Cat_Item).order_by(desc(Cat_Item.date)).limit(10)
     # convert it to JSON type
     json_result = jsonify(categories=[i.serialize for i in cats],
-                        top_items=[i.serialize for i in items])
-    
-    return json_result
-    
+                          top_items=[i.serialize for i in items])
 
-@app.route('/category/new/JSON',methods=['GET','POST'])
+    return json_result
+
+
+@app.route('/category/<int:cat_id>/JSON', methods=['GET'])
+def Show_Category_JSON(cat_id):
+    if request.method == 'GET':
+        # fetch latest added items .
+        cat = session.query(Category).filter_by(id=cat_id).one()
+
+        return jsonify(item=cat.serialize)
+
+
+@app.route('/category/<int:cat_id>/items/JSON', methods=['GET'])
+def Show_Items_JSON(cat_id):
+    if request.method == 'GET':
+        # fetch latest added items .
+        items = session.query(Cat_Item).filter_by(category_id=cat_id).all()
+        # convert it to Dict type
+        json_result = jsonify(items=[i.serialize for i in items])
+        return json_result
+
+
+@app.route('/category/<int:cat_id>/item/<int:item_id>/JSON', methods=['GET'])
+def Show_Item_JSON(cat_id, item_id):
+    # user login Validation
+
+    if request.method == 'GET':
+        # fetch latest added items .
+        item = session.query(Cat_Item).filter_by(id=item_id).one()
+        # convert it to Dict type
+        json_result = jsonify(item=item.serialize)
+        return json_result
+
+
+# <<<<<<<<<<<<<<<<<< Reserved for JSON post >>>>>>>>>>>>>>>>>>
+
+
+@app.route('/category/new/JSON', methods=['GET', 'POST'])
 def New_Category_JSON(cat_id):
     return render_template("new_category.html")
 
-@app.route('/category/<int:cat_id>/JSON',methods=['GET'])
-def Show_Category_JSON(cat_id):
-    return render_template("category.html")
 
-@app.route('/category/<int:cat_id>/edit/JSON',methods=['GET','POST'])
+@app.route('/category/<int:cat_id>/edit/JSON', methods=['GET', 'POST'])
 def Edit_Category_JSON(cat_id):
     return render_template("edit_category.html")
 
-@app.route('/category/<int:cat_id>/delete/JSON',methods=['GET','POST'])
+
+@app.route('/category/<int:cat_id>/delete/JSON', methods=['GET', 'POST'])
 def Delete_Category_JSON(cat_id):
     return render_template("delete_category.html")
 
-@app.route('/category/<int:cat_id>/items/JSON',methods=['GET'])
-def Show_Items_JSON(cat_id):
-    return render_template("category_items.html")
 
-@app.route('/category/<int:cat_id>/item/new/JSON',methods=['GET','POST'])
-def New_Item_JSON(cat_id,item_id):
+@app.route('/category/<int:cat_id>/item/new/JSON', methods=['GET', 'POST'])
+def New_Item_JSON(cat_id, item_id):
     return render_template("new_catItem.html")
 
-@app.route('/category/<int:cat_id>/item/<int:item_id>/JSON',methods=['GET'])
-def Show_Item_JSON(cat_id,item_id):
-    return render_template("cat_item.html")
 
-@app.route('/category/<int:cat_id>/item/<int:item_id>/edit/JSON',methods=['GET','POST'])
-def Edit_Item_JSON(cat_id,item_id):
+@app.route('/category/<int:cat_id>/item/<int:item_id>/edit/JSON',
+           methods=['GET', 'POST'])
+def Edit_Item_JSON(cat_id, item_id):
     return render_template("edit_catItem")
 
-@app.route('/category/<int:cat_id>/item/<int:item_id>/JSON',methods=['GET','POST'])
-def Delete_Item_JSON(cat_id,item_id):
+
+@app.route('/category/<int:cat_id>/item/<int:item_id>/JSON',
+           methods=['GET', 'POST'])
+def Delete_Item_JSON(cat_id, item_id):
     return render_template("delete_catItem.html")
 
+
+# ----------------------------------------------------- #
+# ------------------ Running App  --------------------- #
+# ----------------------------------------------------- #
+
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
+    app.secret_key = ''.join(random.choice(
+                            string.ascii_uppercase + string.digits)
+                            for x in range(32))
     app.debug = True
     app.run(host='0.0.0.0', port=8000)

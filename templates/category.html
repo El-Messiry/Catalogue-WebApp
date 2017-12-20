@@ -8,10 +8,24 @@
 </head>
 <body>
     <header class="page_header">
-
+        <a href="{{url_for('login')}}">
+            <button>Login</button>
+        </a>
     </header>
     <div class="body_container">
-
+        <div class="category_container">
+            <p class="category_name">{{cat['name']}}</p>
+            <p class="category_desc">{{cat['description']}}</p>
+        </div>
+        <a href="{{url_for('Main_Index', cat_id=cat['id'])}}">
+                <button class="form-button">Go Back</button>
+        </a>
+        <a href="{{url_for('Edit_Category', cat_id=cat['id'])}}">
+                <button class="form-button">Edit</button>
+        </a>
+        <a href="{{url_for('Delete_Category', cat_id=cat['id'])}}">
+                <button class="form-button">Delete</button>
+        </a>
     </div>
     <footer class="page_footer">
 
