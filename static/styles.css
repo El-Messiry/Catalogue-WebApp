@@ -1,0 +1,283 @@
+/* Globals */
+
+body{
+    background-color: #ffffff;
+    font-family: Helvetica , arial , sans-serif ;
+    font-weight: normal;
+    width: 100% ;
+    height: 100%;
+    font-size: 20px;
+    margin: 0px;
+    padding: 0px;
+    display: inline-block;
+}
+
+
+/* Responsive basic styles */
+
+img,embed,object,video{
+    max-width: 100%
+}
+
+nav a,button {
+    min-width: 40px;
+    min-height: 40px;
+}
+.btn-submit:hover,
+a button:hover{
+  cursor: pointer;
+}
+
+pre{
+    min-width: 0;
+}
+
+
+hr{
+    margin: 1em;
+    border: 0;
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+  background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+  background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+  background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+}
+
+footer{
+  height: 70px;
+  padding-top: 20px;
+  padding-bottom:20px;
+  color: #fff;
+  background-color: #333;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+
+.body-container{
+  width: 80%;
+  margin: auto;
+  padding: 0;
+  background-color: #f4f4ff;
+  margin-bottom: -100px;
+}
+
+
+.content-container{
+  width: 100%;
+  min-height: calc(100vh - 244px);
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+/*----------------------------------------------------------------*/
+/*------------------ custom styles -------------------------------*/
+/*----------------------------------------------------------------*/
+
+/* ------------------- HEADER ----------------------------------- */
+
+.page-header {
+    width: 100%;
+    margin-bottom: 30px;
+    height: 100px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    min-height: 56px;
+    transition: min-height 0.3s;
+    color: #fff;
+    background-color: #333;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.header__inner {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header__title {
+    width: 40%;
+    display: inline-block;
+    color: #efefef;
+    text-shadow: 0px 0px 6px rgb(192, 139, 79);
+    float: left;
+    font-weight: 800;
+    font-size: 1.5em;
+    margin: 1em 0.25em;
+    padding-left: 10px;
+    text-align: left;
+}
+
+.login{
+  float: right;
+  margin-top: 16px;
+  padding-right: 10px;
+}
+
+
+
+
+/* ------------------- CONTENT ----------------------------------- */
+
+.categories-container ,
+.items-container{
+  width: 95%;
+  min-height: 100%;
+  margin: auto;
+  padding: 0;
+
+}
+
+.category ,
+.cat-item-main,
+.cat-item{
+  width: 49.5%;
+  display: inline-block;
+  margin-top: 5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.cat-item-main{
+    -webkit-border-radius: 10;
+  -moz-border-radius: 10;
+  border-radius: 10px;
+  background-color: #333;
+
+}
+
+.item-header{
+  font-size: 18px;
+  font-family: arial;
+  color: #ea8f4c;
+}
+
+.block-header{
+  text-align: center;
+  font-size: 30px;
+  text-shadow: 1px 1px 3px #1c1c1c;
+  font-family: Arial;
+}
+
+.item-name{
+  font-size: 30px;
+  text-shadow: 1px 1px 3px #1c1c1c;
+  font-family: Arial;
+}
+
+
+.catItem-name{
+  padding: 10px;
+  font-size: 30px;
+  text-shadow: 1px 1px 3px #1c1c1c;
+  font-family: Arial;
+  text-align: center;
+}
+
+.catItem-desc{
+  padding: 10px;
+}
+
+.my-form{
+  margin:10px;
+}
+
+ input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: none;
+    background-color: #fff;
+}
+
+input[type=text]:focus {
+    border: 3px solid #555;
+}
+
+
+.box-1{
+  width: 90%;
+  margin: auto;
+  margin-bottom: 30px;
+  -webkit-border-radius: 10;
+  -moz-border-radius: 10;
+  border-radius: 10px;
+  background: #ececec;
+  border: solid #a8a8a8 3px;
+  text-decoration: none;
+}
+
+
+
+
+@media (max-width: 1000px){
+
+  .body-container{
+    width: 100%;
+  }
+
+  .header__title{
+    font-size: 1.5em;
+    margin: 1em 0.25em;
+  }
+
+}
+
+@media (max-width: 715px){
+
+
+
+  .body-container{
+    width: 100%;
+  }
+
+  .header__title{
+    width: 60%;
+    font-size: 1.2em;
+    margin: 1.5em 0.25em;
+  }
+
+}
+
+@media (max-width: 590px){
+
+  body{
+    font-size:
+  }
+
+  footer{
+    height: 40px;
+    font-size: 15px;
+  }
+
+  .header__title{
+    font-size: 1em;
+    margin: 1.6em 0.25em;
+  }
+
+
+  .categories-container,
+  .items-container{
+    width: 80%;
+    margin: auto;
+  }
+
+  .category ,
+  .cat-item-main,
+  .cat-item{
+    width: 100%;
+    display: inline-block;
+    margin-top: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .block-header p{
+    font-size: 17px;
+  }
+
+}

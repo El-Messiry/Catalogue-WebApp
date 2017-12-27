@@ -17,6 +17,8 @@ import httplib2
 import json
 from flask import make_response
 import requests
+from getpass import fallback_getpass
+from sqlalchemy.sql.expression import false
 
 app = Flask(__name__)
 
@@ -69,6 +71,18 @@ def getUser(email):
     except:
         return None
 
+
+def html_output(login_session):
+    output = ''
+    output += '<div class="welocme-container"><div class="welcome-header">'
+    output += '<h1>Welcome'
+    output += login_session['username']
+    output += '!</h1></div>'
+    output += '<div class="welcome-img"><img src="'
+    output += login_session['picture']
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += '</div></div>'
+    return output
 # <<<<<<<<<<<<<<<<<<<< Routes >>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -87,49 +101,50 @@ def fbconnect():
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_token = request.data
+    access_token = (request.data).decode('utf-8')
     print ("access token received %s " % access_token)
+
 
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
         open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (  # NOQA
+    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
         app_id, app_secret, access_token)
     h = httplib2.Http()
-    result = h.request(url, 'GET')[1]
-    result = result.decode('utf-8')
-    print("result is : "+result)
+    result = (h.request(url, 'GET')[1]).decode('utf-8')
+
+
     # Use token to get user info from API
-    userinfo_url = "https://graph.facebook.com/v2.11/me"
+    userinfo_url = "https://graph.facebook.com/v2.8/me"
     '''
         Due to the formatting for the result from the server token exchange we have to
         split the token first on commas and select the first index which gives us the key : value
         for the server access token then we split it on colons to pull out the actual token value
         and replace the remaining quotes with nothing so that it can be used directly in the graph
         api calls
-    '''     # NOQA
+    '''
+    print("result is "+str(result))
     token = result.split(',')[0].split(':')[1].replace('"', '')
 
-    url = 'https://graph.facebook.com/v2.11/me?access_token=%s&fields=name,id,email' % token   # NOQA
+    url = 'https://graph.facebook.com/v2.8/me?access_token=%s&fields=name,id,email' % token
     h = httplib2.Http()
-    result = h.request(url, 'GET')[1]
-
+    result = (h.request(url, 'GET')[1]).decode('utf-8')
     # print "url sent for API access:%s"% url
     # print "API JSON result: %s" % result
-    data = json.loads(result.decode('utf-8'))
+    data = json.loads(result)
     login_session['provider'] = 'facebook'
-    login_session['username'] = data['name']
-    login_session['email'] = data['email']
-    login_session['facebook_id'] = data['id']
+    login_session['username'] = data["name"]
+    login_session['email'] = data["email"]
+    login_session['facebook_id'] = data["id"]
 
     # The token must be stored in the login_session in order to properly logout
     login_session['access_token'] = token
 
     # Get user picture
-    url = 'https://graph.facebook.com/v2.11/me/picture?access_token=%s&redirect=0&height=200&width=200' % token   # NOQA
+    url = 'https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200' % token
     h = httplib2.Http()
-    result = h.request(url, 'GET')[1]
+    result = (h.request(url, 'GET')[1]).decode('utf-8')
     data = json.loads(result)
 
     login_session['picture'] = data["data"]["url"]
@@ -139,30 +154,12 @@ def fbconnect():
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
-
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # NOQA
-
+    login_session['provider'] = 'facebook'
+    
+    
     flash("Now logged in as %s" % login_session['username'])
-    return output
+    return html_output(login_session)
 
-
-@app.route('/fbdisconnect')
-def fbdisconnect():
-    facebook_id = login_session['facebook_id']
-    # The access token must me included to successfully logout
-    access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
-           facebook_id, access_token)
-    h = httplib2.Http()
-    result = h.request(url, 'DELETE')[1]
-    return "you have been logged out"
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -240,27 +237,36 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-
+    login_session['provider'] = 'google'
     # see if user exists, if it doesn't make a new one
     user_id = getUserID(data["email"])
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
-
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '   # NOQA
     flash("you are now logged in as %s" % login_session['username'])
-    print ("done!")
-    return output
+
+    return html_output(login_session)
+
+def fbdisconnect():
+    facebook_id = login_session['facebook_id']
+    # The access token must me included to successfully logout
+    access_token = login_session['access_token']
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    h = httplib2.Http()
+    result = (h.request(url, 'DELETE')[1]).decode('utf-8')
+
+    del login_session['access_token']
+    del login_session['facebook_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['picture']
+    del login_session['provider']
+    response = make_response(json.dumps('Successfully disconnected.'), 200)
+    response.headers['Content-Type'] = 'application/json'
+    return True
 
 
-@app.route('/gdisconnect')
-def disconnect():
+def gdisconnect():
         # Only disconnect a connected user.
     access_token = login_session.get('access_token')
     print(access_token)
@@ -280,10 +286,11 @@ def disconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
+        del login_session['provider']
 
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return redirect(url_for('Main_Index'))
+        return True
     else:
         # For whatever reason, the given token was invalid.
         response = make_response(
@@ -291,6 +298,16 @@ def disconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+@app.route("/disconnect")
+def disconnect():
+    if login_session['provider']=='google':
+        if gdisconnect() :
+            return redirect(url_for('Main_Index'))
+    elif login_session['provider']=='facebook':
+        if fbdisconnect():
+            return redirect(url_for('Main_Index'))
+    
+    return
 
 # <<<<<<<<<<< End Of Login Methods & Routes >>>>>>>>>>>>>
 
@@ -340,11 +357,11 @@ def Main_Index():
     # fetch all categories
     cats = session.query(Category).all()
     # convert it to Dict type
-    cats = to_dict(cats)
+    #cats = to_dict(cats_obj)
     # fetch latest added items .
     items = session.query(Cat_Item).order_by(desc(Cat_Item.date)).limit(10)
     # convert it to Dict type
-    items = to_dict(items)
+    #items = to_dict(items_obj)
 
     return render_template("main.html",
                            items=items,
@@ -380,14 +397,27 @@ def Show_Category(cat_id):
     # fetch all categories
     cat = session.query(Category).filter_by(id=cat_id).one()
     items = session.query(Cat_Item).filter_by(category_id=cat_id).all()
+    
+    if 'username' not in login_session:
+        return render_template('puplic_category.html',
+                               items=items,
+                               cat=cat,
+                               cat_id=cat_id)
+    
+    user_auth = True
+    if cat.user_id != login_session['user_id']:     # Non Authorized user
+        user_auth = False      # Flash error
+    
+    
     # convert it to Dict type
-    cat = to_dict(cat)
-    items = to_dict(items)
+    #cat = to_dict(cat)
+    #items = to_dict(items)
 
     return render_template("category_items.html",
                            cat=cat,
                            items=items,
-                           username=bool_username())
+                           username=bool_username(),
+                           user_auth=user_auth)
 
 
 @app.route('/category/<int:cat_id>/edit', methods=['GET', 'POST'])
@@ -403,8 +433,8 @@ def Edit_Category(cat_id):
 
     if request.method == 'GET':
         # convert item to dict
-        cat = to_dict(cat)
-        print(cat)
+        #cat = to_dict(cat)
+        #print(cat)
         return render_template("edit_category.html", cat=cat)
 
     if request.method == 'POST':
@@ -444,7 +474,7 @@ def Delete_Category(cat_id):
     if request.method == 'GET':
         # fetch all categories
         cat = session.query(Category).filter_by(id=cat_id).one()
-        cat = to_dict(cat)
+        #cat = to_dict(cat)
         return render_template("delete_category.html", cat=cat)
 
     if request.method == 'POST':
@@ -461,7 +491,7 @@ def Show_Items(cat_id):
         # fetch latest added items .
         items = session.query(Cat_Item).filter_by(category_id=cat_id).all()
         # convert it to Dict type
-        items = to_dict(items)
+        #items = to_dict(items)
 
         return render_template("category_items.html",
                                cat=cat,
@@ -471,11 +501,16 @@ def Show_Items(cat_id):
 
 @app.route('/category/<int:cat_id>/item/new', methods=['GET', 'POST'])
 def New_Item(cat_id):
+    category = session.query(Category).filter_by(id=cat_id).one()
     if 'username' not in login_session:
-        return redirect(url_for('/login'))
+        return redirect(url_for('login'))
+
+    if category.user_id != login_session['user_id']:
+        return redirect(url_for('Main_Index'))
 
     if request.method == 'GET':
-        return render_template("new_catItem.html", cat_id=cat_id)
+        return render_template("new_catItem.html",
+                               cat_id=cat_id)
 
     if request.method == 'POST':
         catItem = {}
@@ -495,16 +530,24 @@ def New_Item(cat_id):
 
 @app.route('/category/<int:cat_id>/item/<int:item_id>', methods=['GET'])
 def Show_Item(cat_id, item_id):
-    if request.method == 'GET':
-        # fetch all categories
-        item = session.query(Cat_Item).filter_by(id=item_id).one()
-        # convert item to dict
-        item = to_dict(item)
+    # fetch all categories
+    item = session.query(Cat_Item).filter_by(id=item_id).one()
 
+    if 'username' not in login_session:
+        return render_template("puplic_item.html",
+                               cat_id=cat_id,
+                               item=item)    
+
+    user_auth = True
+    if item.user_id != login_session['user_id']:     # Non Authorized user
+        user_auth = False      # Flash error
+
+    if request.method == 'GET':
         return render_template("cat_item.html",
                                cat_id=cat_id,
                                item=item,
-                               username=bool_username())
+                               username=bool_username(),
+                               user_auth=user_auth)
 
 
 @app.route('/category/<int:cat_id>/item/<int:item_id>/edit',
@@ -521,7 +564,7 @@ def Edit_Item(cat_id, item_id):
 
     if request.method == 'GET':
         # convert item to dict
-        item = to_dict(item)
+        # item = to_dict(item)
         return render_template("edit_catItem.html",
                                cat_id=cat_id,
                                item=item)
@@ -534,17 +577,17 @@ def Edit_Item(cat_id, item_id):
         # data form validation should go here !
 
         # retrieving DB object to modify
-        item = session.query(Cat_Item).filter_by(id=item_id).one()
+        Citem = session.query(Cat_Item).filter_by(id=item_id).one()
 
         # updating Values
-        item.name = item['name']
-        item.description = item['desc']
+        Citem.name = item['name']
+        Citem.description = item['desc']
 
         # Add & Commit changes
-        session.add(item)
+        session.add(Citem)
         session.commit()
         print("category Item has been edited successfully !")
-        return redirect(url_for('/Show_Items', cat_id=cat_id))
+        return redirect(url_for('Show_Items', cat_id=cat_id))
 
 
 @app.route('/category/<int:cat_id>/item/<int:item_id>/delete',
@@ -566,7 +609,7 @@ def Delete_Item(cat_id, item_id):
     if request.method == 'GET':
         # fetch all categories
         item = session.query(Cat_Item).filter_by(id=item_id).one()
-        item = to_dict(item)
+        # item = to_dict(item)
         return render_template("delete_catItem.html", cat_id=cat_id, item=item)
 
     if request.method == 'POST':
@@ -668,6 +711,7 @@ def Delete_Item_JSON(cat_id, item_id):
 # ----------------------------------------------------- #
 
 if __name__ == '__main__':
+    app.static_folder='static'
     app.secret_key = ''.join(random.choice(
                             string.ascii_uppercase + string.digits)
                             for x in range(32))

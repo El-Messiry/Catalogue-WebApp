@@ -3,13 +3,6 @@
 {% include "header.html" %}
 <div class="content-container">
         <div class="btns-wrapper-1">
-            {% if user_auth %}
-            <div class="action-btn">
-                <a href="{{url_for('New_Item',cat_id=cat['id'])}}">
-                    <button class="btn-4">New Item</button>
-                </a>
-            </div>
-            {% endif %}
             <div class="action-btn">
                 <a href="{{url_for('Main_Index')}}">
                     <button class="btn-4">Home</button>
@@ -34,5 +27,4 @@
         {% endif %}
         </div>
 </div>
-
 {% endblock %}

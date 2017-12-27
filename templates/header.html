@@ -1,0 +1,21 @@
+        <header class="page-header">
+            <div class="header__inner">
+                <a href="{{url_for('Main_Index')}}">
+                    <p class="header__title">
+                      Catalogue Web App
+                    </p>
+                </a>
+
+                <div class="login">
+                    {% if username %}
+                        <a href="{{url_for('disconnect')}}">
+                            <button class="btn-1 login-btn">Logout</button>
+                        </a>
+                    {% else %}
+                        <a href="{{url_for('login')}}">
+                            <button class="btn-1 login-btn">Login</button>
+                        </a>
+                    {% endif %}
+                </div>
+
+        </header>

@@ -1,65 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-</head>
-<body>
-    <header class="page_header">
-    <div class="login">
-        {% if username %}
-            <a href="{{url_for('disconnect')}}">
-                <button>Logout</button>
-            </a>
+{% extends "struct.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="content-container">
+    <div class="btn-wrapper">
+        <a href="{{url_for('New_Category')}}">
+            <button class="btn-3"><p>new category</p></button>
+        </a>
+    </div>
+    <div class="block-header">
+        <p>Available Categories</p>
+    </div>
+    <div class="categories-container">
+        {% if cats %}
+            {% for cat in cats %}
+            <div class="category">
+                <a href="{{url_for('Show_Category',cat_id=cat.id)}}">
+                    <button class="btn-2">{{cat.name}}</button>
+                </a>
+            </div>
+            {% endfor %}
         {% else %}
-            <a href="{{url_for('login')}}">
-                <button>Login</button>
-            </a>
+            <p>NO Items</p>
         {% endif %}
     </div>
-    </header>
 
-
-    <div class="body_container">
-        <a href="{{url_for('New_Category')}}">
-            <button class="form-button">Add new Category</button>
-        </a>
-        <div class="categories_container">
-            {% if cats %}
-                {% for cat in cats %}
-                <div class="category">
-                    <a href="{{url_for('Show_Category',cat_id=cat['id'])}}">
-                        <button>{{cat['name']}}</button>
-                    </a>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p>NO Items</p>
-            {% endif %}
-        </div>
-
-            <hr>
-
-        <div class="catItem_container">
-            {% if items %}
-                {% for item in items %}
-                <div class="catItem">
-                    <a href="{{url_for('Show_Item',item_id=item['id'],cat_id=item['category_id'])}}">
-                        <button>{{item['name']}}</button>
-                    </a>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p>NO Items</p>
-            {% endif %}
-        </div>
-
+        <hr>
+    <div class="block-header">
+        <p>Latest Items</p>
     </div>
+    <div class="items-container">
+        {% if items %}
+            {% for item in items %}
+            <div class="cat-item-main">
+                <p class="item-header">{{item.category.name}}</p>
+                <a href="{{url_for('Show_Item',item_id=item.id,cat_id=item.category_id)}}">
+                    <button class="btn-2">{{item.name}}</button>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>NO Items</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
 
-    <footer class="page_footer">
-
-    </footer>
-</body>
-</html>

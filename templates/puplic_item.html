@@ -13,19 +13,7 @@
                 <button class="btn-4">Back to Items</button>
             </a>
         </div>
-        {% if user_auth %}
-        <div class="action-btn">
-            <a href="{{url_for('Edit_Item',cat_id=cat_id,item_id=item['id'])}}">
-                <button class="btn-4">Edit</button>
-            </a>
-        </div>
-        <div class="action-btn">
-            <a href="{{url_for('Delete_Item', cat_id=cat_id,item_id=item['id'])}}">
-                <button class="del-button">Delete</button>
-            </a>
-        </div>
-        {% endif %}
-    </div>
+            </div>
     <div class="catItem_container">
         <div class="box-1">
             <p class="catItem-name">{{item.name}}</p>

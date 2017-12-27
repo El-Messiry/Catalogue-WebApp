@@ -1,39 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-</head>
-<body>
-
-    <div class="body_container">
-        <header class="page_header">
-
-        </header>
-        <div class="content_container">
-                <form method="POST">
-                        <table class="edit-menu-item">
-                            <tr>
-                                <td><label>Enter Item Name</label></td>
-                                <td><input class="small-text-box" type="text" name="catItem_name" placeholder="name ..."></td>
-                            </tr>
-                            <tr>
-                                <td><label>Enter Item description</label></td>
-                                <td><input class="large-text-box" type="text" name="catItem_desc" placeholde="description ....."></td>
-                            </tr>
-                        </table>
-                        <input class="submit-button" type="submit" value="submit">
-                    </form>
-                    <a href="{{url_for('Main_Index')}}">
-                                <button class="form-button">Go Back</button>
-                    </a>
+{% extends "struct.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="content-container">
+    <div class="btns-wrapper-1">
+        <div class="action-btn">
+            <a href="{{url_for('Show_Items',cat_id = cat_id)}}">
+                <button class="btn-4">Back</button>
+            </a>
         </div>
-        <footer class="page_footer">
-
-        </footer>
     </div>
+    <form method="POST" class="my-form">
+        <table class="edit-category-item">
+            <tr>
+                <td><label>Enter Item Name</label></td>
+                <td><input class="small-text-box" type="text" name="catItem_name" placeholder="name ..."></td>
+            </tr>
+            <tr>
+                <td><label>Enter Item description</label></td>
+                <td><input class="large-text-box" type="text" name="catItem_desc" placeholde="description ....."></td>
+            </tr>
+        </table>
+        <input class="btn-4 btn-submit" type="submit" value="submit">
+    </form>
 
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='btns.css') }}">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+    </head>
+    <body>
+        <div class="body-container">
+            {% block content %}
+            {% endblock %}
+            <footer class="page_footer">
+                <p>///Messiry Designes copyright &copy; 2017</p>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -1,34 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-</head>
-<body>
-    <header class="page_header">
-        <a href="{{url_for('login')}}">
-            <button>Login</button>
-        </a>
-    </header>
-    <div class="body_container">
-        <div class="category_container">
-            <p class="category_name">{{cat['name']}}</p>
-            <p class="category_desc">{{cat['description']}}</p>
+{% extends "struct.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="body_container">
+    <div class="btns-wrapper-1">
+        <div class="action-btn">
+            <a href="{{url_for('Main_Index')}}">
+                <button class="btn-4">Home</button>
+            </a>
         </div>
-        <a href="{{url_for('Main_Index', cat_id=cat['id'])}}">
-                <button class="form-button">Go Back</button>
-        </a>
-        <a href="{{url_for('Edit_Category', cat_id=cat['id'])}}">
-                <button class="form-button">Edit</button>
-        </a>
+        <div class="action-btn">
+            <a href="{{url_for('Edit_Category', cat_id=cat.id)}}">
+                <button class="btn-4">Edit</button>
+            </a>
+        <div>
+    </div>
+    <div class="box-1">
+        <p class="category_name">{{cat.nam}}</p>
+        <hr>
+        <p class="category_desc">{{cat.description}}</p>
+    </div>
+    <div class="action-btn">
         <a href="{{url_for('Delete_Category', cat_id=cat['id'])}}">
-                <button class="form-button">Delete</button>
+            <button class="del-button">Delete</button>
         </a>
     </div>
-    <footer class="page_footer">
-
-    </footer>
-</body>
-</html>
+</div>
+{% endblock %}
