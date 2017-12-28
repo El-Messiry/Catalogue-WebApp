@@ -17,10 +17,10 @@ import httplib2
 import json
 from flask import make_response
 import requests
-from getpass import fallback_getpass
-from sqlalchemy.sql.expression import false
+
 
 app = Flask(__name__)
+app_port = 8000
 
 CLIENT_ID = json.loads(
     open('g_client_secrets.json', 'r').read())['web']['client_id']
@@ -298,7 +298,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-@app.route("/disconnect")
+@app.route("/disconnect", methods=['GET'])
 def disconnect():
     if login_session['provider']=='google':
         if gdisconnect() :
@@ -674,9 +674,6 @@ def Show_Item_JSON(cat_id, item_id):
 # <<<<<<<<<<<<<<<<<< Reserved for JSON post >>>>>>>>>>>>>>>>>>
 
 
-@app.route('/category/new/JSON', methods=['GET', 'POST'])
-def New_Category_JSON(cat_id):
-    return render_template("new_category.html")
 
 
 @app.route('/category/<int:cat_id>/edit/JSON', methods=['GET', 'POST'])
@@ -716,4 +713,4 @@ if __name__ == '__main__':
                             string.ascii_uppercase + string.digits)
                             for x in range(32))
     app.debug = True
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=app_port)
