@@ -1,5 +1,7 @@
 # Catalogue WepApp
+
 <br>
+
 ### Description:
 This is Udacity 4th project of the Full Stack Web development Nano degree.
 Creating an Item Catalogue that serves clients to show avaiable categories and items within each category.
@@ -9,6 +11,7 @@ Creating an Item Catalogue that serves clients to show avaiable categories and i
 <br>
 <hr>
 <br>
+
 ### Contents:
 - **`config.sh`** file which contains Linux commands to install needed modules and libs for the app to run.
 - **`templates`** folder which contains all the **.html** files of the page
@@ -17,9 +20,11 @@ Creating an Item Catalogue that serves clients to show avaiable categories and i
 - **`db_seeds.py`** script for providing initial seeds to the database also used to display contents by `app.py`
 - **`fb_client_secerts`** & **`g_client_secrets`** for 3rd party ( `facebook` - `google` ) Authintication 
 - **`app.py`** Flask/Python3 WebApp  
+
 <br>
 <hr>
 <br>
+
 ### Prerquisetes:
 - Install ***Python3*** , Follow the link [here](https://www.python.org/downloads/).
 - Install ***Flask*** form [here](http://flask.pocoo.org/docs/0.12/installation/).
@@ -30,6 +35,7 @@ Creating an Item Catalogue that serves clients to show avaiable categories and i
 <br>
 <hr>
 <br>
+
 ### Walkthrough `app.py`:
 - Import required libs & modules 
 	
