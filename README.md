@@ -5,7 +5,8 @@
 ### Description:
 This is Udacity 4th project of the Full Stack Web development Nano degree.
 Creating an Item Catalogue that serves clients to show avaiable categories and items within each category.
-**Authintication** by Providing Google & Facebook  ***OAuth2***  **Authorization** for each client to only *update ,  create  , delete* items only for their own created *category* or *item*.
+**Authintication** by Providing Google & Facebook  ***OAuth2***.
+ **Authorization** for each client to only *update ,  create  , delete* items only for their own created *category* or *item*.
 **JSON** API endpoint `GET requests` to show availabel categories and items.
 
 <br>
@@ -116,6 +117,7 @@ Creating an Item Catalogue that serves clients to show avaiable categories and i
 <br>		    
 <hr>
 <br>
+
 ### Running the App:
 - Run **`database_setup.py`** to create the database and relations needed by the `app.py`
 - Run **`db_seeds.py`** to create dummy inputs as database seeds 
@@ -124,6 +126,7 @@ Creating an Item Catalogue that serves clients to show avaiable categories and i
 <br>		    
 <hr>
 <br>
+
 ### How to Use :
 - In `/main` you will find 
 	- `login`button to redirect to login page.
