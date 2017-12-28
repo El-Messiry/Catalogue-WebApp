@@ -12,27 +12,6 @@ body{
     display: inline-block;
 }
 
-
-/* Responsive basic styles */
-
-img,embed,object,video{
-    max-width: 100%
-}
-
-nav a,button {
-    min-width: 40px;
-    min-height: 40px;
-}
-.btn-submit:hover,
-a button:hover{
-  cursor: pointer;
-}
-
-pre{
-    min-width: 0;
-}
-
-
 hr{
     margin: 1em;
     border: 0;
@@ -70,6 +49,28 @@ footer{
   padding: 0;
   margin-bottom: 20px;
 }
+
+/* Responsive basic styles */
+
+img,embed,object,video{
+    max-width: 100%
+}
+
+nav a,button {
+    min-width: 40px;
+    min-height: 40px;
+}
+.btn-submit:hover,
+a button:hover{
+  cursor: pointer;
+}
+
+pre{
+    min-width: 0;
+}
+
+
+
 
 /*----------------------------------------------------------------*/
 /*------------------ custom styles -------------------------------*/
@@ -244,10 +245,6 @@ input[type=text]:focus {
 }
 
 @media (max-width: 590px){
-
-  body{
-    font-size:
-  }
 
   footer{
     height: 40px;
