@@ -133,7 +133,7 @@ Creating an Item Catalogue that serves clients to show avaiable categories and i
 	- `add new category` button to redirect to creat new category
 > Only logged in user can add new category
 	
-	- All the available *categories* will be shown along with latest 10 *items* add by users
+- All the available *categories* will be shown along with latest 10 *items* add by users
 
 - In each **Category** list of *items* within will be available to display 
 > Only Authorized users will be able to `Edit` or `Delete` the category
