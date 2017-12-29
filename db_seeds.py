@@ -264,32 +264,32 @@ category = Category(name='Weight Lifting',user_id=6,
 session.add(category)
 session.commit()
 
-Item = Cat_Item(name='Stick',category=category, user = User6,
+Item = Cat_Item(name='Dumbles',category=category, user = User6,
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(Item)
 session.commit()
 
-Item = Cat_Item(name='Stick',category=category, user = User6,
+Item = Cat_Item(name='Ez Bar',category=category, user = User6,
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(Item)
 session.commit()
 
-Item = Cat_Item(name='Stick',category=category, user = User6,
+Item = Cat_Item(name='Weight Gloves',category=category, user = User6,
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(Item)
 session.commit()
 
-Item = Cat_Item(name='Stick',category=category, user = User5,
+Item = Cat_Item(name='Back support Belt',category=category, user = User5,
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(Item)
 session.commit()
 
-Item = Cat_Item(name='Stick',category=category, user = User2,
+Item = Cat_Item(name='knee protection',category=category, user = User2,
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(Item)
 session.commit()
 
-Item = Cat_Item(name='Stick',category=category, user = User4,
+Item = Cat_Item(name='sweat band',category=category, user = User4,
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam malesuada dictum nisi, ac tincidunt arcu. Nullam fringilla lectus ac accumsan pretium. Aenean id ex at leo faucibus tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla euismod massa eu tellus posuere porta. Vivamus interdum vel urna ut iaculis. Vivamus tempor mattis mi in lacinia. Pellentesque sodales arcu mi, a vulputate tortor porttitor eu. Cras faucibus eros pharetra, vestibulum neque sed, condimentum purus. Phasellus consectetur risus ac gravida sagittis.")
 session.add(Item)
 session.commit()

@@ -30,6 +30,7 @@ Creating a Catalogue WepApp that displayes items based on their category also pr
 - Install ***Python3*** , Follow the link [here](https://www.python.org/downloads/).
 - Install ***Flask*** form [here](http://flask.pocoo.org/docs/0.12/installation/).
 - install ***SQLite*** , Follow the link [here](https://mislav.net/rails/install-sqlite3/).
+> if running on linux ,run `sudo apt-get install sqlite3 libsqlite3-dev`in terminal.
 - If you running on Linux Use config.sh to install and update other rquirements If not please install these ( [SQLAlchemy](https://www.pythoncentral.io/how-to-install-sqlalchemy/) - [oauth2client](https://pypi.python.org/pypi/oauth2client/4.0.0)  - [requests](http://docs.python-requests.org/en/master/)  -  [httplib2](https://pypi.python.org/pypi/httplib2/0.10.3)  ) 
 
 
