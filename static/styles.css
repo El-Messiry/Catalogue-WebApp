@@ -23,7 +23,7 @@ hr{
 }
 
 footer{
-  height: 70px;
+  height: 50px;
   padding-top: 20px;
   padding-bottom:20px;
   color: #fff;
@@ -61,7 +61,9 @@ nav a,button {
     min-height: 40px;
 }
 .btn-submit:hover,
-a button:hover{
+.del-button:hover,
+a:hover ,
+button:hover{
   cursor: pointer;
 }
 

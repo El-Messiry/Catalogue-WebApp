@@ -19,6 +19,11 @@
                 <td><label>Enter Category description</label></td>
                 <td><input class="large-text-box" type="text" name="catItem_desc" placeholde="{{item.description}}"></td>
             </tr>
+            {% if err %}
+            <tr>
+                <p style="font-size: 15px; color: red;">{{err}}</p>
+            </tr>
+            {% endif %}
         </table>
         <input class="btn-4 btn-submit" type="submit" value="submit">
     </form>

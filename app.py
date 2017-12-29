@@ -23,13 +23,14 @@ import httplib2
 import json
 from flask import make_response
 import requests
+import re
 
 # ----------------------------------------------------- #
 # ------------------  Flask App  ---------------------- #
 # ----------------------------------------------------- #
 
 app = Flask(__name__)
-app_port = 8000
+app_port = 8000         # PLEASE specify the PORT number
 
 CLIENT_ID = json.loads(
     open('g_client_secrets.json', 'r').read())['web']['client_id']
@@ -344,18 +345,38 @@ def to_dict(obj):
     return result
 
 
-def validate_data(cat=0, catItem=0):
-    if cat:
-        if cat['name'] == '' or cat['desc'] == '':
-            return False
-            # should implement Regression to check validity of name and minimum
-            # number of characters for the description
-    if catItem:
-        if catItem['name'] == '' or catItem['desc'] == '':
-            return False
-            # should implement Regression to check validity of name and minimum
-            # number of characters for the description
+def is_alphabet(tested_string):
+    if re.match('^[a-zA-Z0-9_]*$', tested_string):
+        return True
+    else:
+        return False
 
+def form_clr_err():
+    del login_session['form_err_msg']
+    return
+
+def validate_data(data):
+    login_session['form_err_msg'] = ''
+    # check if empty field
+    if data['name'] == '':
+        print("empty")
+        login_session['form_err_msg'] = 'Please fill all the fields'
+        return False
+
+    if data['desc'] == '':
+        login_session['form_err_msg'] = 'Please fill all the fields'
+        return False
+
+    # check category name length
+    if len(data['name'])>20 :
+        login_session['form_err_msg'] = 'category name is too long'
+        return False
+
+    # check if there is special characters used in name field
+    if not is_alphabet(data['name']):
+        print("failed regression")
+        login_session['form_err_msg'] = 'Only alphabet letters are allowed in the name field'  # NOQA
+        return False
     return True
 
 
@@ -394,7 +415,13 @@ def New_Category():
         return redirect(url_for('login'))
 
     if request.method == 'GET':
-        return render_template("new_category.html")
+        err = ''
+        if 'form_err_msg' in login_session:
+            err = login_session['form_err_msg']
+            form_clr_err()
+        return render_template("new_category.html",
+                               username=bool_username(),
+                               err=err)
 
     if request.method == 'POST':
         cat = {}
@@ -402,6 +429,10 @@ def New_Category():
         # fetch form data & assign it to corresponding Dict key
         cat['name'] = request.form.get('cat_name')
         cat['desc'] = request.form.get('cat_desc')
+        # validate data
+        if validate_data(cat) == False:
+            return redirect(url_for('New_Category'))
+            
         # DB commit
         session.add(Category(name=cat['name'],
                              description=cat['desc'],
@@ -419,13 +450,16 @@ def Show_Category(cat_id):
     items = session.query(Cat_Item).filter_by(category_id=cat_id).all()
 
     if 'username' not in login_session:
+        print("NOT authenticated user")
         return render_template('puplic_category.html',
                                items=items,
                                cat=cat,
-                               cat_id=cat_id)
+                               cat_id=cat_id,
+                               username=bool_username())
 
     user_auth = True
     if cat.user_id != login_session['user_id']:     # Non Authorized user
+        print("NOT authorized user")
         user_auth = False      # Flash error
 
     # convert it to Dict type
@@ -444,10 +478,12 @@ def Show_Category(cat_id):
 def Edit_Category(cat_id):
     # fetch all categories
     cat = session.query(Category).filter_by(id=cat_id).one()
-    # check if user logged in
+
+    # check user Authenticity
     if 'username' not in login_session:
         return redirect(url_for('login'))
 
+    # check user Authorization
     if cat.user_id != login_session['user_id']:     # Non Authorized user
         return redirect(url_for('Main_Index'))      # Flash error
 
@@ -455,16 +491,26 @@ def Edit_Category(cat_id):
         # convert item to dict
         # cat = to_dict(cat)
         # print(cat)
-        return render_template("edit_category.html", cat=cat)
+
+        err = ''
+        if 'form_err_msg' in login_session:
+            err = login_session['form_err_msg']
+            form_clr_err()
+
+        return render_template("edit_category.html",
+                               cat=cat,
+                               username=bool_username(),
+                               err = err)
 
     if request.method == 'POST':
         cat = {}
         cat['name'] = request.form.get('cat_name')
         cat['desc'] = request.form.get('cat_desc')
 
-        # data form validation should go here !
-        if not (validate_data(cat)):
-            return redirect(url_for('Main_Index'))
+        # validate data 
+        if not validate_data(cat):
+            return redirect(url_for('Edit_Category',
+                                    cat_id=cat_id))
 
         # retrieving DB object to modify
         category = session.query(Category).filter_by(id=cat_id).one()
@@ -485,21 +531,29 @@ def Edit_Category(cat_id):
 def Delete_Category(cat_id):
     # fetch all categories
     cat = session.query(Category).filter_by(id=cat_id).one()
-    # check if user logged in
+    items = session.query(Cat_Item).filter_by(category_id=cat_id).all()
+
+    # check user Authenticity
     if 'username' not in login_session:
         return redirect(url_for('login'))
 
+    # check user Authorization
     if cat.user_id != login_session['user_id']:      # Non Authorized user
-        return redirect(url_for('Main_Index'))       # Flash error
+        return redirect(url_for('Main_Index'))       # should Flash error
 
     if request.method == 'GET':
         # fetch all categories
         cat = session.query(Category).filter_by(id=cat_id).one()
         # cat = to_dict(cat)
-        return render_template("delete_category.html", cat=cat)
+        return render_template("delete_category.html",
+                               cat=cat,
+                               username=bool_username())
 
     if request.method == 'POST':
-        cat = session.query(Category).filter_by(id=cat_id).one()
+        # deleting items first
+        for item in items:
+            session.delete(item)
+        # deleting category
         session.delete(cat)
         session.commit()
         return redirect(url_for('Main_Index'))
@@ -525,15 +579,21 @@ def Show_Items(cat_id):
 # New category item
 def New_Item(cat_id):
     category = session.query(Category).filter_by(id=cat_id).one()
+
+    # check user Authenticity
     if 'username' not in login_session:
         return redirect(url_for('login'))
 
-    if category.user_id != login_session['user_id']:
-        return redirect(url_for('Main_Index'))
-
     if request.method == 'GET':
+        err = ''
+        if 'form_err_msg' in login_session:
+            err = login_session['form_err_msg']
+            form_clr_err()
+
         return render_template("new_catItem.html",
-                               cat_id=cat_id)
+                               cat_id=cat_id,
+                               username=bool_username(),
+                               err=err)
 
     if request.method == 'POST':
         catItem = {}
@@ -541,6 +601,11 @@ def New_Item(cat_id):
         # fetch form data & assign it to corresponding Dict key
         catItem['name'] = request.form.get('catItem_name')
         catItem['desc'] = request.form.get('catItem_desc')
+        
+        if not validate_data(catItem):
+            print("validation failed")
+            return redirect(url_for('New_Item',
+                                    cat_id=cat_id))
         # DB commit
         category_item = Cat_Item(name=catItem['name'],
                                  description=catItem['desc'],
@@ -548,7 +613,9 @@ def New_Item(cat_id):
                                  category_id=cat_id)
         session.add(category_item)
         session.commit()
-        return redirect(url_for('Show_Items', cat_id=cat_id))
+        return redirect(url_for('Show_Items',
+                                cat_id=cat_id,
+                                username=bool_username()))
 
 
 @app.route('/category/<int:cat_id>/item/<int:item_id>', methods=['GET'])
@@ -560,7 +627,8 @@ def Show_Item(cat_id, item_id):
     if 'username' not in login_session:
         return render_template("puplic_item.html",
                                cat_id=cat_id,
-                               item=item)
+                               item=item,
+                               username=bool_username())
 
     user_auth = True
     if item.user_id != login_session['user_id']:     # Non Authorized user
@@ -585,22 +653,31 @@ def Edit_Item(cat_id, item_id):
         return redirect(url_for('login'))
 
     if item.user_id != login_session['user_id']:          # Non Authorized user
-        return redirect(url_for('Show_Items', cat_id=cat_id))     # Flash error
+        return redirect(url_for('Show_Items',
+                                cat_id=cat_id,
+                                username=bool_username()))     # Flash error
 
     if request.method == 'GET':
-        # convert item to dict
-        # item = to_dict(item)
+        err = ''
+        if 'form_err_msg' in login_session:
+            err = login_session['form_err_msg']
+            form_clr_err()
+
         return render_template("edit_catItem.html",
                                cat_id=cat_id,
-                               item=item)
+                               item=item,
+                               username=bool_username(),
+                               err=err)
 
     if request.method == 'POST':
         item = {}
         item['name'] = request.form.get('catItem_name')
         item['desc'] = request.form.get('catItem_desc')
 
-        # data form validation should go here !
-
+        # validate data
+        if not validate_data(item):
+            return redirect(url_for('New_Item',
+                                    cat_id=cat_id))
         # retrieving DB object to modify
         Citem = session.query(Cat_Item).filter_by(id=item_id).one()
 
@@ -612,12 +689,13 @@ def Edit_Item(cat_id, item_id):
         session.add(Citem)
         session.commit()
         print("category Item has been edited successfully !")
-        return redirect(url_for('Show_Items', cat_id=cat_id))
+        return redirect(url_for('Show_Items',
+                                cat_id=cat_id,
+                                username=bool_username()))
 
 
 @app.route('/category/<int:cat_id>/item/<int:item_id>/delete',
            methods=['GET', 'POST'])
-
 # Delete category item
 def Delete_Item(cat_id, item_id):
     # fetch all Items
@@ -629,15 +707,23 @@ def Delete_Item(cat_id, item_id):
         item = session.query(Cat_Item).filter_by(id=item_id).one()
     except:
         print("Trying to delete not existing row")
-        return redirect(url_for('Show_Items', cat_id=cat_id))
+        return redirect(url_for('Show_Items',
+                                cat_id=cat_id,
+                                username=bool_username()))
+    
     if item.user_id != login_session['user_id']:         # Non Authorized user
-        return redirect(url_for('Show_Items', cat_id=cat_id))    # Flash error
+        return redirect(url_for('Show_Items',
+                                cat_id=cat_id,
+                                username=bool_username()))    # Flash error
 
     if request.method == 'GET':
         # fetch all categories
         item = session.query(Cat_Item).filter_by(id=item_id).one()
         # item = to_dict(item)
-        return render_template("delete_catItem.html", cat_id=cat_id, item=item)
+        return render_template("delete_catItem.html",
+                               cat_id=cat_id,
+                               item=item,
+                               username=bool_username())
 
     if request.method == 'POST':
         try:
@@ -647,7 +733,9 @@ def Delete_Item(cat_id, item_id):
             return redirect(url_for('Show_Items', cat_id=cat_id))
         except:
             print("Trying to delete not existing row")
-            return redirect(url_for('Show_Items', cat_id=cat_id))
+            return redirect(url_for('Show_Items',
+                                    cat_id=cat_id,
+                                    username=bool_username()))
 
 
 # ----------------------------------------------------- #

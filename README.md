@@ -4,9 +4,9 @@
 
 ### Description:
 This is Udacity 4th project of the Full Stack Web development Nano degree.
-Creating an Item Catalogue that serves clients to show avaiable categories and items within each category.
+Creating a Catalogue WepApp that displayes items based on their category also provide the users to add new categories and the ability to insert items into categories.
 **Authintication** by Providing Google & Facebook  ***OAuth2***.
- **Authorization** for each client to only *update ,  create  , delete* items only for their own created *category* or *item*.
+ **Authorization** for  (*`create` , `Read` , `update` , `delete`*) actions to items/categories by only authorized users. 
 **JSON** API endpoint `GET requests` to show availabel categories and items.
 
 <br>

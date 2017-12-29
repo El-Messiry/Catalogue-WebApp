@@ -17,23 +17,26 @@
 
     <div class="body-container">
 
-    <!-- Header -->
-        <header class="page-header">
-            <div class="header__inner">
-                <a href="{{url_for('Main_Index')}}">
-                    <p class="header__title">
-                      Catalogue Web App
-                    </p>
-                </a>
-            </div>
-        </header>
-    <!-- END of HEADER -->
+      <!-- Header -->
+          <header class="page-header">
+              <div class="header__inner">
+                  <a href="{{url_for('Main_Index')}}">
+                      <p class="header__title">
+                        Catalogue Web App
+                      </p>
+                  </a>
+              </div>
+          </header>
+      <!-- END of HEADER -->
 
     <!-- Content -->
         <div class="content-container">
 
             <!-- GOOGLE PLUS SIGN IN-->
-            <div class="gplus-button">
+            <div class="block-header">
+              <p style="font-size: 20px;">login with Google</p>
+            </div>
+            <div class="gplus-button" style="width: 120px; margin:auto; display: block;">
                 <span class="g-signin"
                     id="gplusg-btn"
                     data-scope="openid email"
@@ -46,7 +49,7 @@
                 </span>
             </div>
 
-
+            <hr>
                 <script>
                     function signInCallback(authResult) {
                   if (authResult['code']) {
@@ -84,7 +87,10 @@
             <!--END GOOGLE PLUS SIGN IN -->
 
             <!--FACEBOOK SIGN IN -->
-            <div class="fb-button">
+            <div class="block-header">
+              <p style="font-size: 20px;">login with Facebook</p>
+            </div>
+            <div class="fb-button" style="width: 100px; margin:auto; display: block;">
 
                     <fb:login-button  scope="public_profile,email" onlogin="sendTokenToServer();" size="large">
                         <a href='javascript:sendTokenToServer()'>Facebook</a>
@@ -132,7 +138,7 @@
                       success: function(result) {
                         // Handle or verify the server response if necessary.
                         if (result) {
-                          $('#result').html("")
+                          $('#result').html('<div style=" width: 100%; margin: auto;"><h4 style=" font: arial; font-size:20px"> login successful <br> redirecting ... </h4></div>')
                          setTimeout(function() {
                           window.location.href = "/main";
                          }, 4000);
@@ -151,7 +157,7 @@
                   }
                 </script>
             <!--END FACEBOOK SIGN IN -->
-            <div id="result"></div>
+            <div id="result" style="width: 30%; margin: auto; font-size: inherit; font-family: arial"></div>
         </div>
     <!-- END of Content -->
 
@@ -160,6 +166,8 @@
                     <p>///Messiry Designes copyright &copy; 2017</p>
         </footer>
     <!-- END of Footer -->
+
+
 
     </div>
   </body>

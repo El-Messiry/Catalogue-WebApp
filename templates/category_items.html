@@ -3,34 +3,51 @@
 {% include "header.html" %}
 <div class="content-container">
         <div class="btns-wrapper-1">
-            {% if user_auth %}
-            <div class="action-btn">
-                <a href="{{url_for('New_Item',cat_id=cat['id'])}}">
-                    <button class="btn-4">New Item</button>
-                </a>
-            </div>
-            {% endif %}
             <div class="action-btn">
                 <a href="{{url_for('Main_Index')}}">
                     <button class="btn-4">Home</button>
                 </a>
             </div>
+            <div class="action-btn">
+                <a href="{{url_for('New_Item',cat_id=cat.id)}}">
+                    <button class="btn-4">New Item</button>
+                </a>
+            </div>
+            {% if user_auth %}
+            <div class="action-btn">
+                <a href="{{url_for('Edit_Category',cat_id=cat.id)}}">
+                    <button class="edit-btn">Edit Category</button>
+                </a>
+            </div>
+            <div class="action-btn">
+                <a href="{{url_for('Delete_Category',cat_id=cat.id)}}">
+                    <button class="del-button">Delete Category</button>
+                </a>
+            </div>
+            {% endif %}
         </div>
-        <div class="block-header">
-            <p class="item-name">{{cat.name}}</p>
+        <div class="catItem_container">
+            <div class="box-1">
+                <p class="catItem-name">{{cat.name}}</p>
+                <hr>
+                <p class="catItem-desc">{{cat.description}}</p>
+            </div>
         </div>
         <hr>
         <div class="items-container">
+            <div class="block-header">
+                <p>Items</p>
+            </div>
         {% if items %}
             {% for item in items %}
             <div class="cat-item">
-                <a href="{{url_for('Show_Item',cat_id=cat['id'],item_id=item['id'])}}">
+                <a href="{{url_for('Show_Item',cat_id=cat.id,item_id=item.id)}}">
                     <button class="btn-4">{{item.name}}</button>
                 </a>
             </div>
             {% endfor %}
         {% else %}
-            <p style="font-size: 20px; font-family: arial;">NO Items</p>
+            <p style="font-size: 20px; font-family: arial;">No Items</p>
         {% endif %}
         </div>
 </div>

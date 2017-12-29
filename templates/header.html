@@ -9,11 +9,11 @@
                 <div class="login">
                     {% if username %}
                         <a href="{{url_for('disconnect')}}">
-                            <button class="btn-1 login-btn">Logout</button>
+                            <button class="logout-btn">Logout</button>
                         </a>
                     {% else %}
                         <a href="{{url_for('login')}}">
-                            <button class="btn-1 login-btn">Login</button>
+                            <button class="login-btn">Login</button>
                         </a>
                     {% endif %}
                 </div>

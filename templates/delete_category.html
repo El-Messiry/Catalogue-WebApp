@@ -1,7 +1,7 @@
 {% extends "struct.html" %}
 {% block content %}
 {% include "header.html" %}
-<div class="body_container">
+<div class="content-container">
     <div class="btns-wrapper-1">
         <div class="action-btn">
             <a href="{{url_for('Main_Index')}}">
@@ -9,14 +9,13 @@
             </a>
         </div>
     </div>
-    <form class="delete-menu-item" method="POST">
-            <div class="delete-warning">
-                <p>Are you sure you want to delete this item " {{cat.name}} "?</p>
-            </div>
-            <div class="decision-container">
-                <input type="submit" name="btn-4 del_button" value="Yes Delete Item">
-            </div>
-        </form>
-    </div>
+    <form class="my-form" method="POST">
+        <div class="delete-warning">
+            <p>Are you sure you want to delete this item " {{cat.name}} " and all its items ?</p>
+        </div>
+        <div class="action-btn">
+            <button class="del-button" type="submit">Delete Category</button>
+        </div>
+    </form>
 </div>
 {% endblock %}
