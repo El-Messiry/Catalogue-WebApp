@@ -122,9 +122,9 @@ Creating a Catalogue WepApp that displayes items based on their category also pr
 ### Running the App:
 - Run **`database_setup.py`** to create the database and relations needed by the `app.py`
 > Note : every time this setup runs it drops then recreates all of the database related data
+- Run **`app.py`**.and go to [localhost:8000/main](http://localhost:8000/main) to see the empty version of the App. 
 - Run **`db_seeds.py`** to create dummy inputs as database seeds 
-> must run it every time before app.py to provide the seeds unless you want an empty app.
-- Finally, run **`app.py`**.and go to [localhost:8000/main](http://localhost:8000/main) & enjoy the app. 
+> must run it every time After `app.py` to provide the seeds unless you want an empty app.
 
 <br>		    
 <hr>

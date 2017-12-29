@@ -76,5 +76,5 @@ class Cat_Item(Base):
         }
 
 engine = create_engine('sqlite:///Catalogue.db')
-Base.metadata.drop_all(engine)
+# Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
