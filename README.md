@@ -142,3 +142,5 @@ Creating a Catalogue WepApp that displayes items based on their category also pr
 > Only Authorized users willbe able to `Edit` or `Delete` and Item
 
 - any Edit, Delete or Add new (item/category), user must be logged in. Any action trying to do any of the previous will redirect to `/main` or `/login`.
+
+- data supplied in forms `Edit`,`Add New` category/item will be validated by ( name should only have alphanumiric - no more than 20 chars - no special characters - check if data submitted empty or not)
