@@ -351,9 +351,11 @@ def is_alphabet(tested_string):
     else:
         return False
 
+
 def form_clr_err():
     del login_session['form_err_msg']
     return
+
 
 def validate_data(data):
     login_session['form_err_msg'] = ''
@@ -368,7 +370,7 @@ def validate_data(data):
         return False
 
     # check category name length
-    if len(data['name'])>20 :
+    if len(data['name']) > 20:
         login_session['form_err_msg'] = 'category name is too long'
         return False
 
@@ -430,9 +432,9 @@ def New_Category():
         cat['name'] = request.form.get('cat_name')
         cat['desc'] = request.form.get('cat_desc')
         # validate data
-        if validate_data(cat) == False:
+        if not validate_data(cat):
             return redirect(url_for('New_Category'))
-            
+
         # DB commit
         session.add(Category(name=cat['name'],
                              description=cat['desc'],
@@ -500,14 +502,14 @@ def Edit_Category(cat_id):
         return render_template("edit_category.html",
                                cat=cat,
                                username=bool_username(),
-                               err = err)
+                               err=err)
 
     if request.method == 'POST':
         cat = {}
         cat['name'] = request.form.get('cat_name')
         cat['desc'] = request.form.get('cat_desc')
 
-        # validate data 
+        # validate data
         if not validate_data(cat):
             return redirect(url_for('Edit_Category',
                                     cat_id=cat_id))
@@ -601,7 +603,7 @@ def New_Item(cat_id):
         # fetch form data & assign it to corresponding Dict key
         catItem['name'] = request.form.get('catItem_name')
         catItem['desc'] = request.form.get('catItem_desc')
-        
+
         if not validate_data(catItem):
             print("validation failed")
             return redirect(url_for('New_Item',
@@ -710,7 +712,7 @@ def Delete_Item(cat_id, item_id):
         return redirect(url_for('Show_Items',
                                 cat_id=cat_id,
                                 username=bool_username()))
-    
+
     if item.user_id != login_session['user_id']:         # Non Authorized user
         return redirect(url_for('Show_Items',
                                 cat_id=cat_id,
@@ -743,6 +745,7 @@ def Delete_Item(cat_id, item_id):
 # ----------------------------------------------------- #
 
 ''' Please be Noted that the API only provides GET requests '''
+
 
 @app.route('/main/JSON', methods=['GET'])
 # JSON response ( available categories & latest 10 items )
@@ -819,13 +822,6 @@ def Edit_Item_JSON(cat_id, item_id):
            methods=['GET', 'POST'])
 def Delete_Item_JSON(cat_id, item_id):
     return render_template("delete_catItem.html")
-
-
-# ----------------------------------------------------- #
-# ------------------ Running App  --------------------- #
-# ----------------------------------------------------- #
-
-
 
 # ----------------------------------------------------- #
 # ---------------------  MAIN   ----------------------- #
